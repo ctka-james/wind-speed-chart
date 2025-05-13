@@ -11,6 +11,7 @@ function wsc_create_source_table() {
     $sql = "CREATE TABLE $table_name (
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
         location VARCHAR(50) NOT NULL,
+        location_zhtw VARCHAR(50) NOT NULL,
         source_url TEXT NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (id)
