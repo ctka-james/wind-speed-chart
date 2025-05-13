@@ -1,11 +1,29 @@
 <?php
 defined('ABSPATH') || exit;
 
-// 建立資料表
-function wsc_create_wind_table() {
+// 新增風速來源表
+function wsc_create_source_table() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'wind_sources';
+
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE $table_name (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        location VARCHAR(50) NOT NULL,
+        source_url TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta($sql);
+}
+
+// 風速資料存放資料表
+function wsc_create_data_table() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'wind_speed_data';
-
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE $table_name (
@@ -15,16 +33,22 @@ function wsc_create_wind_table() {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (id)
     ) $charset_collate;";
-
+    
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta($sql);
+}
+
+// 建立資料表
+function wsc_create_wind_table() {
+    wsc_create_data_table();   // <-- 風速資料存放
+    wsc_create_source_table(); // <-- 來源網站網址
 }
 
 // 刪除資料表
 function wsc_delete_wind_table() {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'wind_speed_data';
-    $wpdb->query("DROP TABLE IF EXISTS $table_name");
+    $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wind_speed_data");
+    $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wind_sources");
 }
 
 // 插入資料（供爬蟲呼叫）
