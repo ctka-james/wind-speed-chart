@@ -9,8 +9,8 @@
 defined('ABSPATH') || exit;
 
 // 定義 Python 爬蟲路徑（新的資料夾 wp-crawler）
-define('WSC_CRAWLER_PATH', plugin_dir_path(__FILE__) . '../private/wp-crawler/');
-define('WSC_CRAWLER_EXEC', WSC_CRAWLER_PATH . 'wind-Chart.py');
+define('WSC_CRAWLER_PATH', dirname(ABSPATH) . '/private/wp-crawler/');
+define('WSC_CRAWLER_EXEC', dirname(ABSPATH) . '/private/wp-crawler/wind-Chart.py');
 
 // 載入功能模組
 require_once plugin_dir_path(__FILE__) . 'wind-chart-db.php';

@@ -143,7 +143,10 @@ function wsc_render_admin_page() {
     echo '<pre>';
     echo 'WSC_CRAWLER_PATH: ' . WSC_CRAWLER_PATH . "\n";
     echo 'WSC_CRAWLER_EXEC: ' . WSC_CRAWLER_EXEC . "\n";
+    
     echo '</pre>';
+
+  
 //////////////////////////////////////////////////////////////////////////////////////
 
     ?>
@@ -168,7 +171,7 @@ function wsc_run_crawler() {
     file_put_contents($json_path, json_encode($sources));
 
     // 組合指令：執行 Python 並將 JSON 路徑當成參數
-    $cmd = escapeshellcmd("python3 " . WIND_CHART_PYTHON_PATH . " " . escapeshellarg($json_path));
+    $cmd = escapeshellcmd("python3 " . WSC_CRAWLER_EXEC . " " . escapeshellarg($json_path));
     exec($cmd . " 2>&1", $output, $return_var);
 
     if ($return_var !== 0) {
