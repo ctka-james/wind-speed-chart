@@ -143,9 +143,8 @@ function wsc_render_admin_page() {
     echo '<pre>';
     echo 'WSC_CRAWLER_PATH: ' . WSC_CRAWLER_PATH . "\n";
     echo 'WSC_CRAWLER_EXEC: ' . WSC_CRAWLER_EXEC . "\n";
-    
-    echo '</pre>';
-
+    print_r(wsc_run_crawler());
+    echo '</pre>';  
   
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -161,7 +160,7 @@ function wsc_run_crawler() {
 
     // 取出所有 source_url
     $sources = $wpdb->get_results("SELECT id, location, location_zhtw, source_url FROM $table");
-
+    
     if (empty($sources)) {
         return '無可用資料來源。';
     }
@@ -172,6 +171,7 @@ function wsc_run_crawler() {
 
     // 組合指令：執行 Python 並將 JSON 路徑當成參數
     $cmd = escapeshellcmd("python3 " . WSC_CRAWLER_EXEC . " " . escapeshellarg($json_path));
+    
     exec($cmd . " 2>&1", $output, $return_var);
 
     if ($return_var !== 0) {
