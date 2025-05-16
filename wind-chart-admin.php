@@ -153,7 +153,7 @@ function wsc_render_admin_page() {
     <?php
 }
 
-// 執行爬蟲 wind-Chart.py
+// 寫入並存檔 wind_sources.json 以供 wind-Chart.py 取用
 function wsc_run_crawler() {
     global $wpdb;
     $table = $wpdb->prefix . 'wind_sources';
@@ -167,17 +167,10 @@ function wsc_run_crawler() {
 
     // 將資料輸出為 JSON 並寫入暫存檔（例如 /tmp/wind_sources.json）
     $json_path = sys_get_temp_dir() . '/wind_sources.json';
-    file_put_contents($json_path, json_encode($sources));
-
-    // 組合指令：執行 Python 並將 JSON 路徑當成參數
-    $cmd = escapeshellcmd("python3 " . WSC_CRAWLER_EXEC . " " . escapeshellarg($json_path));
+    $result = file_put_contents($json_path, json_encode($sources));
     
-    exec($cmd . " 2>&1", $output, $return_var);
-
-    if ($return_var !== 0) {
-        return "爬蟲執行失敗，錯誤輸出：<br>" . nl2br(implode("\n", $output));
-    }
-
-    return "爬蟲執行成功：<br>" . nl2br(implode("\n", $output));
+    if ($result === false) {
+        error_log("寫入失敗：$json_path");
+    }    
 }
 
